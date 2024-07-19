@@ -31,4 +31,12 @@ class MoE(nn.Module):
         return torch.sum(outputs * weights, dim=2)
     
 
-    
+    def train_moe(self, x_train, y_train, epochs=500, learning_rate=0.001):
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(self.parameters(), lr=learning_rate)
+        for epoch in range(epochs):
+            optimizer.zero_grad()
+            outputs = self(x_train)
+            loss = criterion(outputs, y_train)
+            loss.backward()
+            optimizer.step()
